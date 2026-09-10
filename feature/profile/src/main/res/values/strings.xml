@@ -1,0 +1,20 @@
+<resources>
+    <string name="profile_title_fallback">Profile</string>
+    <string name="profile_settings_action">Settings</string>
+    <string name="profile_logout_action">Log out</string>
+    <string name="profile_retry_action">Retry</string>
+    <string name="profile_posts_section_title">Posts</string>
+    <string name="profile_stat_posts">Posts</string>
+    <string name="profile_stat_listeners">Listeners</string>
+    <string name="profile_stat_listening">Listening</string>
+    <string name="profile_play_voice_bio">Play voice bio</string>
+    <string name="profile_stop_voice_bio">Stop voice bio</string>
+    <string name="profile_play_post_audio">Play post audio</string>
+    <string name="profile_stop_post_audio">Stop post audio</string>
+    <string name="profile_verified_badge">Verified</string>
+    <string name="profile_private_badge">Private account</string>
+    <string name="error_network_session_expired">Your session has expired. Please log in again.</string>
+    <string name="error_network_server">Something went wrong (%1$d).</string>
+    <string name="error_network_no_connection">Couldn\'t reach Channel. Check your connection.</string>
+    <string name="error_network_unknown">Something went wrong.</string>
+</resources>

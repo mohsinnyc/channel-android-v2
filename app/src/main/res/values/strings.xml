@@ -11,5 +11,13 @@
 
     <!-- Stand-ins for real screens, removed as each feature module lands -->
     <string name="destination_placeholder_banned">Banned</string>
-    <string name="destination_placeholder_main">Main tabs (Feed/Explore/Notifications/Profile) — TODO</string>
+    <string name="destination_placeholder_feed">Feed is coming soon</string>
+    <string name="destination_placeholder_explore">Explore is coming soon</string>
+    <string name="destination_placeholder_notifications">Notifications are coming soon</string>
+
+    <!-- Bottom nav tab labels -->
+    <string name="main_tab_feed">Feed</string>
+    <string name="main_tab_explore">Explore</string>
+    <string name="main_tab_notifications">Notifications</string>
+    <string name="main_tab_profile">Profile</string>
 </resources>
