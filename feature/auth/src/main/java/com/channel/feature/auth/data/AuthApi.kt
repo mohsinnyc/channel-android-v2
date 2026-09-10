@@ -24,12 +24,24 @@ class AuthApi @Inject constructor(
 
     suspend fun resetPassword(request: ResetPasswordRequest): ApiResult<Unit> = post("auth/reset-password", request)
 
-    private suspend inline fun <reified Req, reified Res> post(path: String, body: Req): ApiResult<Res> {
-        return try {
-            val response: HttpResponse = client.post(path) {
+    suspend fun requestEmailVerification(): ApiResult<Unit> = postEmpty("auth/email-verification/request")
+
+    suspend fun verifyEmail(request: VerifyEmailRequest): ApiResult<Unit> = post("auth/email-verification/verify", request)
+
+    private suspend inline fun <reified Req, reified Res> post(path: String, body: Req): ApiResult<Res> =
+        runCatchingRequest {
+            client.post(path) {
                 contentType(ContentType.Application.Json)
                 setBody(body)
             }
+        }
+
+    private suspend inline fun <reified Res> postEmpty(path: String): ApiResult<Res> =
+        runCatchingRequest { client.post(path) }
+
+    private suspend inline fun <reified Res> runCatchingRequest(request: () -> HttpResponse): ApiResult<Res> {
+        return try {
+            val response = request()
             if (response.status.isSuccess()) {
                 ApiResult.Success(response.body())
             } else {

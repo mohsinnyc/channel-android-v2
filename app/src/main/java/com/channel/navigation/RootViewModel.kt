@@ -10,12 +10,12 @@ import com.channel.core.network.model.OnboardingState
 import com.channel.core.network.session.AuthState
 import com.channel.core.network.session.AuthStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -25,11 +25,9 @@ class RootViewModel @Inject constructor(
     private val authApi: AuthApi
 ) : ViewModel() {
 
-    private val statusRetrySignal = MutableStateFlow(0)
-
     val destination: StateFlow<AppDestination> = combine(
         authStateManager.authState,
-        statusRetrySignal
+        authStateManager.refreshSignal.onStart { emit(Unit) }
     ) { authState, _ -> authState }
         .flatMapLatest { authState ->
             when (authState) {
@@ -43,8 +41,9 @@ class RootViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, AppDestination.Loading)
 
+    /** Re-checks /auth/status — used by the Error destination's retry action. */
     fun retry() {
-        statusRetrySignal.value += 1
+        authStateManager.requestStatusRefresh()
     }
 
     private suspend fun resolveAuthenticatedDestination(): AppDestination {

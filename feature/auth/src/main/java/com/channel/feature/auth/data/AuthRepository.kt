@@ -24,6 +24,10 @@ class AuthRepository @Inject constructor(
     suspend fun resetPassword(email: String, code: String, newPassword: String): ApiResult<Unit> =
         authApi.resetPassword(ResetPasswordRequest(email, code, newPassword))
 
+    suspend fun requestEmailVerification(): ApiResult<Unit> = authApi.requestEmailVerification()
+
+    suspend fun verifyEmail(code: String): ApiResult<Unit> = authApi.verifyEmail(VerifyEmailRequest(code))
+
     /** Persists tokens and flips the app-wide session state on a successful signup/login. */
     private suspend fun authenticate(result: ApiResult<AuthResponse>): ApiResult<Unit> {
         if (result is ApiResult.Success) {

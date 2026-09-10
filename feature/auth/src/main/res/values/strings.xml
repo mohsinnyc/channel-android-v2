@@ -40,7 +40,16 @@
     <string name="error_code_blank">Code is required</string>
     <string name="error_code_invalid_format">Enter the 6-digit code</string>
 
-    <string name="error_network_unauthorized">Incorrect username or password.</string>
+    <string name="auth_invalid_credentials">Incorrect username or password.</string>
+
+    <string name="email_verification_title">Verify your email</string>
+    <string name="email_verification_message">We\'ve sent a 6-digit code to your email. Enter it below to continue.</string>
+    <string name="email_verification_verify_button">Verify</string>
+    <string name="email_verification_resend_button">Resend code</string>
+    <string name="email_verification_code_sent">A new code has been sent to your email.</string>
+    <string name="email_verification_logout_button">Log out</string>
+
+    <string name="error_network_session_expired">Your session has expired. Please log in again.</string>
     <string name="error_network_server">Something went wrong (%1$d).</string>
     <string name="error_network_no_connection">Couldn\'t reach Channel. Check your connection.</string>
     <string name="error_network_unknown">Something went wrong.</string>

@@ -18,6 +18,7 @@ import com.channel.core.designsystem.components.ChannelTextField
 import com.channel.core.designsystem.components.PasswordField
 import com.channel.core.designsystem.components.PrimaryButton
 import com.channel.core.designsystem.theme.Spacing
+import com.channel.core.network.api.NetworkError
 import com.channel.feature.auth.R
 import com.channel.feature.auth.ui.components.message
 
@@ -57,7 +58,14 @@ fun LoginScreen(
 
         uiState.submitError?.let { error ->
             Spacer(Modifier.height(Spacing.m))
-            Text(error.message(), color = MaterialTheme.colorScheme.error)
+            // A 401 here means wrong credentials, not the "session expired" reading
+            // the shared NetworkError.message() uses everywhere else.
+            val message = if (error == NetworkError.Unauthorized) {
+                stringResource(R.string.auth_invalid_credentials)
+            } else {
+                error.message()
+            }
+            Text(message, color = MaterialTheme.colorScheme.error)
         }
 
         Spacer(Modifier.height(Spacing.xs))

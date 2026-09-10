@@ -14,9 +14,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.channel.core.designsystem.theme.ChannelTheme
 import com.channel.navigation.AppDestination
 import com.channel.navigation.RootViewModel
+import com.channel.feature.auth.ui.emailverification.EmailVerificationDestination
 import com.channel.ui.AuthDestinationHost
 import com.channel.ui.BannedPlaceholderDestination
-import com.channel.ui.EmailVerificationPlaceholderDestination
 import com.channel.ui.ErrorDestination
 import com.channel.ui.LoadingDestination
 import com.channel.ui.MainPlaceholderDestination
@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         AppDestination.Loading -> LoadingDestination()
                         AppDestination.Auth -> AuthDestinationHost()
                         AppDestination.Banned -> BannedPlaceholderDestination()
-                        AppDestination.EmailVerification -> EmailVerificationPlaceholderDestination()
+                        AppDestination.EmailVerification -> EmailVerificationDestination()
                         is AppDestination.Onboarding -> OnboardingPlaceholderDestination(current.state)
                         AppDestination.Main -> MainPlaceholderDestination()
                         is AppDestination.Error -> ErrorDestination(current.reason, onRetry = viewModel::retry)
