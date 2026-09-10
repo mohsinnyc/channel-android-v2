@@ -48,7 +48,8 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
-    implementation(libs.ktor.client.core)
+    implementation(libs.retrofit.core)
+    implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
 
     debugImplementation(libs.androidx.ui.tooling)

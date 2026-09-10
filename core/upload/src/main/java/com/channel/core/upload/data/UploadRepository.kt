@@ -5,15 +5,16 @@ import com.channel.core.network.di.RawHttpClient
 import com.channel.core.upload.model.UploadPurpose
 import com.channel.core.upload.model.UploadType
 import com.channel.core.upload.model.contentType
-import io.ktor.client.HttpClient
-import io.ktor.client.request.put
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * Presign -> PUT to S3 -> confirm completion. The backend rejects any post,
@@ -23,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class UploadRepository @Inject constructor(
     private val uploadApi: UploadApi,
-    @RawHttpClient private val rawClient: HttpClient,
+    @RawHttpClient private val rawClient: OkHttpClient,
 ) {
     suspend fun uploadFile(file: File, type: UploadType, purpose: UploadPurpose): ApiResult<String> {
         val presign = when (val result = uploadApi.presign(PresignRequest(type, purpose, file.length()))) {
@@ -33,12 +34,14 @@ class UploadRepository @Inject constructor(
         }
 
         val putSucceeded = try {
-            val response = rawClient.put(presign.url) {
-                contentType(ContentType.parse(type.contentType))
-                setBody(file.readBytes())
+            withContext(Dispatchers.IO) {
+                val request = Request.Builder()
+                    .url(presign.url)
+                    .put(file.readBytes().toRequestBody(type.contentType.toMediaType()))
+                    .build()
+                rawClient.newCall(request).execute().use { it.isSuccessful }
             }
-            response.status.isSuccess()
-        } catch (e: kotlinx.coroutines.CancellationException) {
+        } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             return ApiResult.Exception(e)
