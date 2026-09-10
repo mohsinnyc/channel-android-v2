@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Channel</string>
+
+    <string name="action_retry">Retry</string>
+
+    <!-- Errors — resolved here from a NetworkError, never as raw strings in the ViewModel -->
+    <string name="error_server">Something went wrong (%1$d).</string>
+    <string name="error_no_connection">Couldn\'t reach Channel. Check your connection.</string>
+    <string name="error_unknown">Something went wrong.</string>
+
+    <!-- Stand-ins for real screens, removed as each feature module lands -->
+    <string name="destination_placeholder_auth">Auth (signup/login) — TODO</string>
+    <string name="destination_placeholder_banned">Banned</string>
+    <string name="destination_placeholder_email_verification">Verify your email — TODO</string>
+    <string name="destination_placeholder_onboarding">Onboarding: %1$s — TODO</string>
+    <string name="destination_placeholder_main">Main tabs (Feed/Explore/Notifications/Profile) — TODO</string>
 </resources>

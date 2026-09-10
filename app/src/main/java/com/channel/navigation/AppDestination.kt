@@ -1,5 +1,6 @@
 package com.channel.navigation
 
+import com.channel.core.network.api.NetworkError
 import com.channel.core.network.model.OnboardingState
 
 /**
@@ -15,5 +16,5 @@ sealed interface AppDestination {
     data object EmailVerification : AppDestination
     data class Onboarding(val state: OnboardingState) : AppDestination
     data object Main : AppDestination
-    data class Error(val message: String) : AppDestination
+    data class Error(val reason: NetworkError) : AppDestination
 }

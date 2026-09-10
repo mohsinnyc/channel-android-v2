@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.channel.core.network.api.ApiResult
 import com.channel.core.network.api.AuthApi
+import com.channel.core.network.api.NetworkError
 import com.channel.core.network.model.AuthStatusResponse
 import com.channel.core.network.model.OnboardingState
 import com.channel.core.network.session.AuthState
@@ -54,10 +55,10 @@ class RootViewModel @Inject constructor(
                     authStateManager.setLoggedOut()
                     AppDestination.Auth
                 } else {
-                    AppDestination.Error("Something went wrong (${result.code}).")
+                    AppDestination.Error(NetworkError.Server(result.code))
                 }
             }
-            is ApiResult.Exception -> AppDestination.Error("Couldn't reach Channel. Check your connection.")
+            is ApiResult.Exception -> AppDestination.Error(NetworkError.NoConnection)
         }
     }
 

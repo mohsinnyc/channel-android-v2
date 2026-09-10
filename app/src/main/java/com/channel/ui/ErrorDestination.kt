@@ -10,10 +10,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.channel.R
+import com.channel.core.network.api.NetworkError
 
 @Composable
-fun ErrorDestination(message: String, onRetry: () -> Unit) {
+fun ErrorDestination(reason: NetworkError, onRetry: () -> Unit) {
+    val message = when (reason) {
+        is NetworkError.Server -> stringResource(R.string.error_server, reason.code)
+        NetworkError.NoConnection -> stringResource(R.string.error_no_connection)
+        NetworkError.Unknown -> stringResource(R.string.error_unknown)
+    }
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -21,7 +29,7 @@ fun ErrorDestination(message: String, onRetry: () -> Unit) {
     ) {
         Text(message, style = MaterialTheme.typography.bodyMedium)
         Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) {
-            Text("Retry")
+            Text(stringResource(R.string.action_retry))
         }
     }
 }

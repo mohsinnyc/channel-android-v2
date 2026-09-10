@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         AppDestination.EmailVerification -> EmailVerificationPlaceholderDestination()
                         is AppDestination.Onboarding -> OnboardingPlaceholderDestination(current.state)
                         AppDestination.Main -> MainPlaceholderDestination()
-                        is AppDestination.Error -> ErrorDestination(current.message, onRetry = viewModel::retry)
+                        is AppDestination.Error -> ErrorDestination(current.reason, onRetry = viewModel::retry)
                     }
                 }
             }
