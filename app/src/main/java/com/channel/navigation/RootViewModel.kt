@@ -1,0 +1,70 @@
+package com.channel.navigation
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.channel.core.network.api.ApiResult
+import com.channel.core.network.api.AuthApi
+import com.channel.core.network.model.AuthStatusResponse
+import com.channel.core.network.model.OnboardingState
+import com.channel.core.network.session.AuthState
+import com.channel.core.network.session.AuthStateManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
+
+@HiltViewModel
+class RootViewModel @Inject constructor(
+    private val authStateManager: AuthStateManager,
+    private val authApi: AuthApi
+) : ViewModel() {
+
+    private val statusRetrySignal = MutableStateFlow(0)
+
+    val destination: StateFlow<AppDestination> = combine(
+        authStateManager.authState,
+        statusRetrySignal
+    ) { authState, _ -> authState }
+        .flatMapLatest { authState ->
+            when (authState) {
+                AuthState.Unknown -> flow { emit(AppDestination.Loading) }
+                AuthState.LoggedOut -> flow { emit(AppDestination.Auth) }
+                AuthState.Authenticated -> flow {
+                    emit(AppDestination.Loading)
+                    emit(resolveAuthenticatedDestination())
+                }
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, AppDestination.Loading)
+
+    fun retry() {
+        statusRetrySignal.value += 1
+    }
+
+    private suspend fun resolveAuthenticatedDestination(): AppDestination {
+        return when (val result = authApi.getStatus()) {
+            is ApiResult.Success -> result.data.toDestination()
+            is ApiResult.Error -> {
+                if (result.code == 401) {
+                    authStateManager.setLoggedOut()
+                    AppDestination.Auth
+                } else {
+                    AppDestination.Error("Something went wrong (${result.code}).")
+                }
+            }
+            is ApiResult.Exception -> AppDestination.Error("Couldn't reach Channel. Check your connection.")
+        }
+    }
+
+    private fun AuthStatusResponse.toDestination(): AppDestination = when {
+        isBanned -> AppDestination.Banned
+        !isEmailVerified -> AppDestination.EmailVerification
+        onboardingState != OnboardingState.Complete -> AppDestination.Onboarding(onboardingState)
+        else -> AppDestination.Main
+    }
+}

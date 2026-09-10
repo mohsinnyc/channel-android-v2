@@ -1,0 +1,10 @@
+<resources>
+    <!-- Plain theme the Activity switches to once Compose content is set. -->
+    <style name="Theme.Channel" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Held by the OS splash screen only until the cold-start token check resolves. -->
+    <style name="Theme.Channel.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@android:color/white</item>
+        <item name="postSplashScreenTheme">@style/Theme.Channel</item>
+    </style>
+</resources>
