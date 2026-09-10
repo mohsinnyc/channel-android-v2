@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
@@ -42,7 +42,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideHttpClient(json: Json, tokenManager: TokenManager): HttpClient {
-        return HttpClient(Android) {
+        return HttpClient(OkHttp) {
             expectSuccess = false
 
             install(ContentNegotiation) { json(json) }
@@ -59,9 +59,9 @@ object NetworkModule {
                         val refresh = tokenManager.getRefreshTokenOnce().orEmpty()
                         BearerTokens(access, refresh)
                     }
-                    // TODO: wire this up once the login/refresh-token endpoints are built —
-                    // returning null here just means "give up," which is correct today
-                    // since nothing can be logged in yet.
+                    // TODO: call POST /auth/refresh here once that's wired up client-side —
+                    // returning null just means "give up on refresh," which still leaves
+                    // login/signup itself working correctly today.
                     refreshTokens { null }
                 }
             }
@@ -80,7 +80,7 @@ object NetworkModule {
     @Singleton
     @RawHttpClient
     fun provideRawHttpClient(): HttpClient {
-        return HttpClient(Android) {
+        return HttpClient(OkHttp) {
             expectSuccess = false
             install(HttpTimeout) {
                 requestTimeoutMillis = 60_000
