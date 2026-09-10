@@ -17,6 +17,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.url
+import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +28,19 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    // Ktor's bearer Auth provider caches whatever loadTokens{} returns (even null) the
+    // very first time ANY request goes through the client, and never calls it again
+    // until a 401 triggers its internal refreshTokens flow. These endpoints run before
+    // a token exists, so they must be excluded from preemptive auth — otherwise the
+    // first signup/login call permanently poisons the cache with a null token and every
+    // subsequent authenticated call (e.g. auth/status) goes out with no Authorization header.
+    private val UNAUTHENTICATED_PATHS = setOf(
+        "auth/signup",
+        "auth/login",
+        "auth/forgot-password",
+        "auth/reset-password",
+    )
 
     @Provides
     @Singleton
@@ -63,6 +77,10 @@ object NetworkModule {
                     // returning null just means "give up on refresh," which still leaves
                     // login/signup itself working correctly today.
                     refreshTokens { null }
+                    sendWithoutRequest { request ->
+                        val path = request.url.encodedPath.trimStart('/')
+                        path !in UNAUTHENTICATED_PATHS
+                    }
                 }
             }
 
