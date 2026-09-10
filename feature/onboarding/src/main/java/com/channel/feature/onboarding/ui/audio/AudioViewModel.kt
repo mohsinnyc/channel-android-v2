@@ -53,7 +53,14 @@ class AudioViewModel @Inject constructor(
         audioRecorder.stop()
     }
 
-    fun reRecord() {
+    fun reRecord() = resetAudioState()
+
+    /** Called when the screen leaves composition, however that happens (forward
+     * navigation, back, or the host being torn down) - AudioRecorder/AudioPlayer
+     * are process-wide singletons, so nothing else clears their state for us. */
+    fun onLeaveScreen() = resetAudioState()
+
+    private fun resetAudioState() {
         audioPlayer.stop()
         audioRecorder.reset()
     }
@@ -78,9 +85,5 @@ class AudioViewModel @Inject constructor(
                 is ApiResult.Exception -> _submitState.value = SubmitState(submitError = result.toNetworkError())
             }
         }
-    }
-
-    override fun onCleared() {
-        audioPlayer.stop()
     }
 }

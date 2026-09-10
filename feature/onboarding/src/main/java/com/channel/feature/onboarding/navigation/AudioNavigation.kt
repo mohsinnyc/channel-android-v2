@@ -1,5 +1,6 @@
 package com.channel.feature.onboarding.navigation
 
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,6 +16,10 @@ fun NavGraphBuilder.audioDestination(navController: NavHostController) {
     composable<AudioDestination> {
         val viewModel: AudioViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsState()
+
+        DisposableEffect(viewModel) {
+            onDispose { viewModel.onLeaveScreen() }
+        }
 
         LaunchedEffect(viewModel) {
             viewModel.events.collect { event ->
