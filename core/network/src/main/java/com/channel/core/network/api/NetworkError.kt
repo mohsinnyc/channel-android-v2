@@ -6,6 +6,7 @@ package com.channel.core.network.api
  * also matters if/when a Kotlin Multiplatform target is added.
  */
 sealed interface NetworkError {
+    data object Unauthorized : NetworkError
     data class Server(val code: Int) : NetworkError
     data object NoConnection : NetworkError
     data object Unknown : NetworkError

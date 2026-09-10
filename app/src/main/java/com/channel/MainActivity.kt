@@ -14,7 +14,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.channel.navigation.AppDestination
 import com.channel.navigation.RootViewModel
-import com.channel.ui.AuthPlaceholderDestination
+import com.channel.ui.AuthDestinationHost
 import com.channel.ui.BannedPlaceholderDestination
 import com.channel.ui.EmailVerificationPlaceholderDestination
 import com.channel.ui.ErrorDestination
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     when (val current = destination) {
                         AppDestination.Loading -> LoadingDestination()
-                        AppDestination.Auth -> AuthPlaceholderDestination()
+                        AppDestination.Auth -> AuthDestinationHost()
                         AppDestination.Banned -> BannedPlaceholderDestination()
                         AppDestination.EmailVerification -> EmailVerificationPlaceholderDestination()
                         is AppDestination.Onboarding -> OnboardingPlaceholderDestination(current.state)

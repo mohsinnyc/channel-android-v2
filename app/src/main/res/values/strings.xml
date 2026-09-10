@@ -4,6 +4,7 @@
     <string name="action_retry">Retry</string>
 
     <!-- Errors — resolved here from a NetworkError, never as raw strings in the ViewModel -->
+    <string name="error_unauthorized">You\'ve been signed out.</string>
     <string name="error_server">Something went wrong (%1$d).</string>
     <string name="error_no_connection">Couldn\'t reach Channel. Check your connection.</string>
     <string name="error_unknown">Something went wrong.</string>

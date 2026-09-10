@@ -18,6 +18,7 @@ import com.channel.core.network.api.NetworkError
 @Composable
 fun ErrorDestination(reason: NetworkError, onRetry: () -> Unit) {
     val message = when (reason) {
+        NetworkError.Unauthorized -> stringResource(R.string.error_unauthorized)
         is NetworkError.Server -> stringResource(R.string.error_server, reason.code)
         NetworkError.NoConnection -> stringResource(R.string.error_no_connection)
         NetworkError.Unknown -> stringResource(R.string.error_unknown)
