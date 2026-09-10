@@ -4,4 +4,4 @@ import com.channel.core.contracts.navigation.ChannelDestination
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResetPasswordDestination(val email: String) : ChannelDestination
+data object EmailVerificationDestination : ChannelDestination

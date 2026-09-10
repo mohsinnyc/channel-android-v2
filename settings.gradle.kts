@@ -17,6 +17,7 @@ dependencyResolutionManagement {
 rootProject.name = "channel-android-v2"
 
 include(":app")
+include(":core:contracts")
 include(":core:network")
 include(":core:designsystem")
 include(":core:upload")

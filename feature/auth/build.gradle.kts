@@ -28,6 +28,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:contracts"))
     implementation(project(":core:network"))
     implementation(project(":core:designsystem"))
 
