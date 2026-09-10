@@ -1,7 +1,4 @@
 <resources>
-    <string name="password_show_action">Show password</string>
-    <string name="password_hide_action">Hide password</string>
-
     <string name="auth_username_label">Username</string>
     <string name="auth_password_label">Password</string>
     <string name="auth_email_label">Email</string>

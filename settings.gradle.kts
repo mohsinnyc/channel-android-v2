@@ -18,4 +18,5 @@ rootProject.name = "channel-android-v2"
 
 include(":app")
 include(":core:network")
+include(":core:designsystem")
 include(":feature:auth")

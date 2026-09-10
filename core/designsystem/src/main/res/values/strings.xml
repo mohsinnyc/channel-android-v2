@@ -1,0 +1,4 @@
+<resources>
+    <string name="password_show_action">Show password</string>
+    <string name="password_hide_action">Hide password</string>
+</resources>

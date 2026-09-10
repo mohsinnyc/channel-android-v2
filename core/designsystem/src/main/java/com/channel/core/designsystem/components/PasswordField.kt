@@ -1,4 +1,4 @@
-package com.channel.feature.auth.ui.components
+package com.channel.core.designsystem.components
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.channel.feature.auth.R
+import com.channel.core.designsystem.R
 
 @Composable
 fun PasswordField(

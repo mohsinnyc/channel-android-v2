@@ -41,6 +41,7 @@ android {
 
 dependencies {
     implementation(project(":core:network"))
+    implementation(project(":core:designsystem"))
     implementation(project(":feature:auth"))
 
     implementation(libs.androidx.core.ktx)

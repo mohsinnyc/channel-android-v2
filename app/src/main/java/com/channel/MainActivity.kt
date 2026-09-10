@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -12,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.channel.core.designsystem.theme.ChannelTheme
 import com.channel.navigation.AppDestination
 import com.channel.navigation.RootViewModel
 import com.channel.ui.AuthDestinationHost
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                 if (destination != AppDestination.Loading) keepOsSplashScreen = false
             }
 
-            MaterialTheme {
+            ChannelTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     when (val current = destination) {
                         AppDestination.Loading -> LoadingDestination()
