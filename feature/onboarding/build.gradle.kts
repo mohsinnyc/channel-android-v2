@@ -1,30 +1,18 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "com.channel"
+    namespace = "com.channel.feature.onboarding"
     compileSdk = 35
 
     defaultConfig {
-        // Distinct from the v1 app's "com.channel.android" so both can be
-        // side-loaded on one device during the migration. Change before
-        // this replaces the production Play listing.
-        applicationId = "com.channel.android.v2"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-        }
     }
 
     compileOptions {
@@ -42,28 +30,28 @@ android {
 dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:designsystem"))
-    implementation(project(":feature:auth"))
-    implementation(project(":feature:onboarding"))
+    implementation(project(":core:upload"))
+    implementation(project(":core:media"))
+    implementation(project(":core:audio"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.splashscreen)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
+    implementation(libs.ktor.client.core)
+    implementation(libs.kotlinx.serialization.json)
+
     debugImplementation(libs.androidx.ui.tooling)
 
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }

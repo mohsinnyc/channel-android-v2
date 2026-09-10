@@ -75,4 +75,20 @@ object NetworkModule {
             }
         }
     }
+
+    @Provides
+    @Singleton
+    @RawHttpClient
+    fun provideRawHttpClient(): HttpClient {
+        return HttpClient(Android) {
+            expectSuccess = false
+            install(HttpTimeout) {
+                requestTimeoutMillis = 60_000
+                connectTimeoutMillis = 10_000
+            }
+            install(Logging) {
+                level = LogLevel.INFO
+            }
+        }
+    }
 }

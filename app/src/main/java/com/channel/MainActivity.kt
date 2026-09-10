@@ -20,7 +20,7 @@ import com.channel.ui.BannedPlaceholderDestination
 import com.channel.ui.ErrorDestination
 import com.channel.ui.LoadingDestination
 import com.channel.ui.MainPlaceholderDestination
-import com.channel.ui.OnboardingPlaceholderDestination
+import com.channel.ui.OnboardingDestinationHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                         AppDestination.Auth -> AuthDestinationHost()
                         AppDestination.Banned -> BannedPlaceholderDestination()
                         AppDestination.EmailVerification -> EmailVerificationDestination()
-                        is AppDestination.Onboarding -> OnboardingPlaceholderDestination(current.state)
+                        is AppDestination.Onboarding -> OnboardingDestinationHost(current.state)
                         AppDestination.Main -> MainPlaceholderDestination()
                         is AppDestination.Error -> ErrorDestination(current.reason, onRetry = viewModel::retry)
                     }

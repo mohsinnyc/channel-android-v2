@@ -1,0 +1,33 @@
+<resources>
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_skip">Skip</string>
+
+    <string name="onboarding_image_title">Add a profile photo</string>
+    <string name="onboarding_image_subtitle">Show people who you are.</string>
+    <string name="onboarding_take_photo">Take Photo</string>
+    <string name="onboarding_choose_from_gallery">Choose from Gallery</string>
+    <string name="onboarding_image_preview_description">Profile photo preview</string>
+
+    <string name="onboarding_bio_title">Write a short bio</string>
+    <string name="onboarding_bio_subtitle">Tell people a bit about yourself.</string>
+    <string name="onboarding_bio_label">Bio</string>
+    <string name="onboarding_bio_remaining_characters">%1$d characters left</string>
+
+    <string name="onboarding_audio_title">Record your voice bio</string>
+    <string name="onboarding_audio_subtitle">This plays on your profile — say hi!</string>
+    <string name="onboarding_audio_record_action">Record</string>
+    <string name="onboarding_audio_tap_to_record">Tap to record</string>
+    <string name="onboarding_audio_stop_action">Stop</string>
+    <string name="onboarding_audio_play_action">Play</string>
+    <string name="onboarding_audio_pause_action">Pause</string>
+    <string name="onboarding_audio_rerecord_action">Re-record</string>
+
+    <string name="onboarding_interests_title">Pick your interests</string>
+    <string name="onboarding_interests_subtitle">We\'ll use these to personalize what you see.</string>
+    <string name="onboarding_interests_finish">Finish</string>
+
+    <string name="error_network_session_expired">Your session has expired. Please log in again.</string>
+    <string name="error_network_server">Something went wrong (%1$d).</string>
+    <string name="error_network_no_connection">Couldn\'t reach Channel. Check your connection.</string>
+    <string name="error_network_unknown">Something went wrong.</string>
+</resources>
