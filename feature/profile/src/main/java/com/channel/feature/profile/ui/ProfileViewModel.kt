@@ -4,21 +4,25 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.channel.core.audio.playback.AudioPlayer
+import com.channel.core.audio.playback.MediaIds
+import com.channel.core.audio.playback.togglePauseResume
+import com.channel.core.audio.playback.toggleStopReset
 import com.channel.core.network.api.ApiResult
 import com.channel.core.network.api.NetworkError
 import com.channel.core.network.api.toNetworkError
 import com.channel.core.network.session.AuthStateManager
-import com.channel.feature.profile.data.PostSummary
+import com.channel.core.posts.model.PlayableAudio
+import com.channel.core.posts.model.toUiModel
 import com.channel.feature.profile.data.ProfileRepository
 import com.channel.feature.profile.data.ProfileResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -39,6 +43,7 @@ class ProfileViewModel @Inject constructor(
         ProfileUiState(
             isLoading = load.isLoading,
             profile = load.profile,
+            posts = load.profile?.posts.orEmpty().map { it.toUiModel() },
             loadError = load.loadError,
             playback = playback,
         )
@@ -63,27 +68,15 @@ class ProfileViewModel @Inject constructor(
 
     /** Play toggles to stop (not pause): tapping again resets to the start rather than resuming. */
     fun toggleVoiceBioPlayback() {
-        val audioUrl = uiState.value.profile?.audioBioUrl
-        if (audioUrl.isNullOrBlank()) return
-        togglePlayback(audioUrl)
+        val profile = uiState.value.profile ?: return
+        val audioUrl = profile.audioBioUrl
+        if (audioUrl.isBlank()) return
+        audioPlayer.toggleStopReset(MediaIds.profileAudio(profile.userId), Uri.parse(audioUrl))
     }
 
-    fun togglePostPlayback(post: PostSummary) {
-        val audioUrl = post.audioUrl ?: return
-        togglePlayback(audioUrl)
-    }
-
-    private fun togglePlayback(mediaId: String) {
-        val playback = audioPlayer.state.value
-        if (playback.mediaId == mediaId && playback.isPlaying) {
-            audioPlayer.stop()
-        } else {
-            audioPlayer.play(Uri.parse(mediaId), mediaId = mediaId)
-        }
-    }
-
-    fun onLeaveScreen() {
-        audioPlayer.stop()
+    /** Ordinary post/embedded-quote audio: tapping again resumes rather than restarting. */
+    fun toggleAudio(audio: PlayableAudio) {
+        audioPlayer.togglePauseResume(audio.mediaId, Uri.parse(audio.url))
     }
 
     fun logout() {

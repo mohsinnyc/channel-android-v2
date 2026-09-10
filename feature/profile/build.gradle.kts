@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:audio"))
+    implementation(project(":core:posts"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -42,7 +43,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.coil.compose)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)

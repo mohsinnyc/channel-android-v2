@@ -1,5 +1,6 @@
 package com.channel.feature.profile.data
 
+import com.channel.core.network.model.post.PostData
 import kotlinx.serialization.Serializable
 
 /** Mirrors ProfilesService.get()'s response shape (profiles/profiles.service.ts). */
@@ -15,6 +16,6 @@ data class ProfileResponse(
     val listenerCount: Int,
     val listeningCount: Int,
     val isPrivate: Boolean,
-    val posts: List<PostSummary>,
+    val posts: List<PostData>,
     val nextPageKey: String? = null,
 )

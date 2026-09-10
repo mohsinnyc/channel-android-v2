@@ -19,6 +19,7 @@ rootProject.name = "channel-android-v2"
 include(":app")
 include(":core:contracts")
 include(":core:network")
+include(":core:posts")
 include(":core:designsystem")
 include(":core:upload")
 include(":core:media")

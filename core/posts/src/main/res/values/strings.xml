@@ -1,0 +1,10 @@
+<resources>
+    <string name="post_reposted_by">%1$s reposted</string>
+    <string name="post_deleted">This post was deleted</string>
+    <string name="post_moderated">This post is no longer available</string>
+    <string name="post_play_audio">Play audio</string>
+    <string name="post_pause_audio">Pause audio</string>
+    <string name="post_action_like">Like</string>
+    <string name="post_action_comment">Comment</string>
+    <string name="post_action_repost">Repost</string>
+</resources>

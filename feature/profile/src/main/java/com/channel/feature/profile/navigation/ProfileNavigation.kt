@@ -1,6 +1,5 @@
 package com.channel.feature.profile.navigation
 
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,15 +13,16 @@ fun NavGraphBuilder.profileDestination() {
         val viewModel: ProfileViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsState()
 
-        DisposableEffect(viewModel) {
-            onDispose { viewModel.onLeaveScreen() }
-        }
-
+        // Playback deliberately keeps going if the user switches tabs or
+        // navigates away - it's driven by the app-wide AudioPlayer singleton,
+        // not this screen's lifecycle. See core:audio for the mediaId scheme
+        // that keeps the same content's playing state consistent everywhere
+        // it's rendered.
         ProfileScreen(
             uiState = uiState,
             onRetry = viewModel::retry,
             onToggleVoiceBioPlayback = viewModel::toggleVoiceBioPlayback,
-            onTogglePostPlayback = viewModel::togglePostPlayback,
+            onToggleAudio = viewModel::toggleAudio,
             onLogout = viewModel::logout,
         )
     }

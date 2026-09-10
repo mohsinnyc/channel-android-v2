@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.channel.core.designsystem"
+    namespace = "com.channel.core.posts"
     compileSdk = 35
 
     defaultConfig {
@@ -25,6 +25,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:network"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:audio"))
+
+    implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.tooling.preview)
@@ -33,4 +38,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     debugImplementation(libs.androidx.ui.tooling)
+
+    testImplementation(libs.junit)
 }

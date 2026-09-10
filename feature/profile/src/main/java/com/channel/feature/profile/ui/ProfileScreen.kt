@@ -19,8 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Hearing
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -39,15 +39,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.channel.core.audio.playback.MediaIds
+import com.channel.core.designsystem.components.Avatar
 import com.channel.core.designsystem.components.PrimaryButton
 import com.channel.core.designsystem.theme.Spacing
+import com.channel.core.posts.model.EmbeddedUiModel
+import com.channel.core.posts.model.PlayableAudio
+import com.channel.core.posts.model.PostUiModel
+import com.channel.core.posts.model.isPlayingAudio
+import com.channel.core.posts.ui.PostCard
 import com.channel.feature.profile.R
-import com.channel.feature.profile.data.PostSummary
 import com.channel.feature.profile.data.ProfileResponse
 import com.channel.feature.profile.ui.components.message
 
@@ -57,7 +60,7 @@ fun ProfileScreen(
     uiState: ProfileUiState,
     onRetry: () -> Unit,
     onToggleVoiceBioPlayback: () -> Unit,
-    onTogglePostPlayback: (PostSummary) -> Unit,
+    onToggleAudio: (PlayableAudio) -> Unit,
     onLogout: () -> Unit,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
@@ -96,10 +99,11 @@ fun ProfileScreen(
             }
             uiState.profile != null -> ProfileContent(
                 profile = uiState.profile,
-                isVoiceBioPlaying = uiState.playback.isPlaying && uiState.playback.mediaId == uiState.profile.audioBioUrl,
-                playingPostId = uiState.playback.mediaId.takeIf { uiState.playback.isPlaying },
+                posts = uiState.posts,
+                isVoiceBioPlaying = uiState.playback.isPlaying && uiState.playback.mediaId == MediaIds.profileAudio(uiState.profile.userId),
+                isAudioPlaying = { audio -> uiState.playback.isPlayingAudio(audio) },
                 onToggleVoiceBioPlayback = onToggleVoiceBioPlayback,
-                onTogglePostPlayback = onTogglePostPlayback,
+                onToggleAudio = onToggleAudio,
                 contentPadding = padding,
             )
         }
@@ -109,10 +113,11 @@ fun ProfileScreen(
 @Composable
 private fun ProfileContent(
     profile: ProfileResponse,
+    posts: List<PostUiModel>,
     isVoiceBioPlaying: Boolean,
-    playingPostId: String?,
+    isAudioPlaying: (PlayableAudio) -> Boolean,
     onToggleVoiceBioPlayback: () -> Unit,
-    onTogglePostPlayback: (PostSummary) -> Unit,
+    onToggleAudio: (PlayableAudio) -> Unit,
     contentPadding: PaddingValues,
 ) {
     LazyColumn(
@@ -139,11 +144,15 @@ private fun ProfileContent(
                 Text(stringResource(R.string.profile_posts_section_title), style = MaterialTheme.typography.titleMedium)
             }
         }
-        items(profile.posts, key = { it.postId }) { post ->
+        items(posts, key = { it.postId }) { post ->
+            val audio = (post as? PostUiModel.Available)?.body?.audio
+            val embeddedAudio = ((post as? PostUiModel.Available)?.embedded as? EmbeddedUiModel.Available)?.body?.audio
             PostCard(
                 post = post,
-                isPlaying = playingPostId == post.audioUrl,
-                onTogglePlayback = { onTogglePostPlayback(post) },
+                isAudioPlaying = audio != null && isAudioPlaying(audio),
+                isEmbeddedAudioPlaying = embeddedAudio != null && isAudioPlaying(embeddedAudio),
+                onToggleAudio = onToggleAudio,
+                onToggleEmbeddedAudio = onToggleAudio,
             )
         }
     }
@@ -168,7 +177,7 @@ private fun ProfileHeader(
                             .background(MaterialTheme.colorScheme.primary, CircleShape),
                     ) {
                         Icon(
-                            imageVector = if (isVoiceBioPlaying) Icons.Filled.Stop else Icons.Filled.PlayArrow,
+                            imageVector = if (isVoiceBioPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                             contentDescription = stringResource(
                                 if (isVoiceBioPlaying) R.string.profile_stop_voice_bio else R.string.profile_play_voice_bio
                             ),
@@ -235,31 +244,6 @@ private fun StatItem(value: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
         Text(value, style = MaterialTheme.typography.titleMedium)
         Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-    }
-}
-
-@Composable
-internal fun Avatar(imageUrl: String?, fallbackText: String, size: Dp) {
-    if (imageUrl != null) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = null,
-            modifier = Modifier.size(size).clip(CircleShape),
-        )
-    } else {
-        Box(
-            modifier = Modifier
-                .size(size)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                fallbackText.take(2).uppercase(),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        }
     }
 }
 

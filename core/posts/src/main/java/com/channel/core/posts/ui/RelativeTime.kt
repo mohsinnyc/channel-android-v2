@@ -1,4 +1,4 @@
-package com.channel.feature.profile.ui.components
+package com.channel.core.posts.ui
 
 import java.time.Duration
 import java.time.Instant
